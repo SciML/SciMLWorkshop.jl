@@ -1,7 +1,10 @@
-Differential-Algebraic Equation Modeling of a Double Pendulum (B)
+# Differential-Algebraic Equation Modeling of a Double Pendulum (B)
 
 ## Part 1: Simple Introduction to DAEs: Mass-Matrix Robertson Equations
-```julia
+
+```@example pendulum
+using DifferentialEquations, Plots, Sundials
+
 function f(du, u, p, t)
     du[1] = -p[1]*u[1] + p[2]*u[2]*u[3]
     du[2] = p[1]*u[1] - p[2]*u[2]*u[3] - p[3]*u[2]*u[2]
@@ -17,7 +20,8 @@ plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))
 ```
 
 ## Part 2: Solving the Implicit Robertson Equations with IDA
-```julia
+
+```@example pendulum
 # Robertson Equation DAE Implicit form
 function h(out, du, u, p, t)
     out[1] = -p[1]*u[1] + p[2]*u[2]*u[3] - du[1]
@@ -71,7 +75,7 @@ index 3 to index 1. Now our solver can handle the
 index 1 system.
 
 ## Part 4: Single Pendulum Solution with IDA
-```julia
+```@example pendulum
 function f(out, da, a, p, t)
    (L, m, g) = p
    u, v, x, y, T = a
@@ -140,7 +144,7 @@ $$
                 \frac{-x_1*x_2 - y_1*y_2}{m_1L_2}T_2 - y_1g &= 0
 \end{align}
 $$
-```julia
+```@example pendulum
 function f(out, da, a, p, t)
    L1, m1, L2, m2, g = p
 

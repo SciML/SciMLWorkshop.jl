@@ -20,7 +20,7 @@ the possibilites!
 Use the [DiffEqFlux.jl README](https://github.com/JuliaDiffEq/DiffEqFlux.jl) to
 construct a neural ODE to train against the training data:
 
-```{julia;eval=false}
+```julia
 u0 = Float32[2.; 0.]
 datasize = 30
 tspan = (0.0f0,1.5f0)
@@ -43,7 +43,7 @@ the GPU and train the neural ODE using GPU-accelerated `Tsit5` with adjoints.
 
 Gather data from the Lotka-Volterra equation:
 
-```{julia;eval=false}
+```julia
 function lotka_volterra(du,u,p,t)
   x, y = u
   α, β, δ, γ = p
@@ -67,7 +67,7 @@ the data.
 
 Generate data from the Lotka-Volterra equation with multiplicative noise
 
-```{julia;eval=false}
+```julia
 function lotka_volterra(du,u,p,t)
   x, y = u
   α, β, δ, γ = p

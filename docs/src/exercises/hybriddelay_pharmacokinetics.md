@@ -21,9 +21,11 @@ First, let's define the simplest hybrid ordinary differential equation: an ODE
 where the events take place at fixed times. The ODE we will use is known as
 the one-compartment model:
 
-$$\begin{align}
+```math
+\begin{align}
 \frac{d[Depot]}{dt} &= -K_a [Depot] + R\\
-\frac{d[Central]}{dt} &= K_a [Depot] - K_e [Central]\end{align}$$
+\frac{d[Central]}{dt} &= K_a [Depot] - K_e [Central]\end{align}
+```
 
 with $t \in [0,90]$, $u_0 = [100.0,0]$, and $p=[K_a,K_e]=[2.268,0.07398]$.
 
@@ -40,9 +42,11 @@ central compartment. This effectively delays the effect of the transition from
 `[Depot]` to `[Central]`. To model this effect, we will use the delay
 differential equation which utilizes a fixed time delay $\tau$:
 
-$$\begin{align}
+```math
+\begin{align}
 \frac{d[Depot]}{dt} &= -K_a [Depot](t)\\
-\frac{d[Central]}{dt} &= K_a [Depot](t-\tau) - K_e [Central]\end{align}$$
+\frac{d[Central]}{dt} &= K_a [Depot](t-\tau) - K_e [Central]\end{align}
+```
 
 where the parameter $τ = 6.0$.
 [Use the DDE tutorial](https://docs.sciml.ai/dev/tutorials/dde_example)
@@ -66,7 +70,7 @@ over time and the derivative of the solution w.r.t. the parameters.
 
 Now let's fit the delayed model to a dataset. For the data, use the array
 
-```{julia;eval=false}
+```julia
 t = 0.0:12.0:90.0
 data = [100.0 0.246196 0.000597933 0.24547 0.000596251 0.245275 0.000595453 0.245511
         0.0 53.7939 16.8784 58.7789 18.3777 59.1879 18.5003 59.2611]

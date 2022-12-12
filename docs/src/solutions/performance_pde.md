@@ -74,7 +74,7 @@ sol1 = @time solve(prob1, TRBDF2(autodiff=false));
 
 Visualizing the solution (works best in a terminal):
 
-```{julia;eval=false}
+```julia
 @gif for t in sol1.t[1]:0.1:sol1.t[end]
     off = N^2
     solt = sol1(t)
@@ -133,7 +133,7 @@ sol2_2 = @time solve(prob2, CVODE_BDF())
 ## Part 3: Exploiting Jacobian Sparsity with Color Differentiation
 
 ```julia
-using SparseDiffTools, SparsityDetection
+using Symbolics
 
 sparsity_pattern = jacobian_sparsity(brusselator_2d_loop,similar(u0),u0,p,2.0)
 jac_sp = sparse(sparsity_pattern)

@@ -11,11 +11,13 @@ a GPU-based parallelism approach.
 
 The Henon-Heiles Hamiltonian system is described by the ODEs:
 
-$$\begin{align}
+```math
+\begin{align}
 \frac{dp_1}{dt} &= -q_1 (1 + 2q_2)\\
 \frac{dp_2}{dt} &= -q_2 - (q_1^2 - q_2^2)\\
 \frac{dq_1}{dt} &= p_1\\
-\frac{dq_2}{dt} &= p_2\end{align}$$
+\frac{dq_2}{dt} &= p_2\end{align}
+```
 
 with initial conditions $u_0 = [0.1,0.0,0.0,0.5]$.
 Solve this system over the timespan $t\in[0,1000]$
@@ -26,15 +28,19 @@ The Henon-Heiles defines a Hamiltonian system with certain structures which
 can be utilized for a more efficient solution. Use [the Dynamical problems page](https://docs.sciml.ai/dev/types/dynamical_types)
 to define a `SecondOrderODEProblem` corresponding to the acceleration terms:
 
-$$\begin{align}
+```math
+\begin{align}
 \frac{d^2q_1}{dt^2} &= -q_1 (1 + 2q_2)\\
-\frac{d^2q_2}{dt^2} &= -q_2 - (q_1^2 - q_2^2)\end{align}$$
+\frac{d^2q_2}{dt^2} &= -q_2 - (q_1^2 - q_2^2)\end{align}
+```
 
 Solve this with a method that is specific to dynamical problems, like `DPRKN6`.
 
 The Hamiltonian can also be directly described:
 
-$$H(p,q) = \frac{1}{2}(p_1^2 + p_2^2) + \frac{1}{2}(q_1^2+q_2^2+2q_1^2 q_2 - \frac{2}{3}q_2^3)$$
+```math
+H(p,q) = \frac{1}{2}(p_1^2 + p_2^2) + \frac{1}{2}(q_1^2+q_2^2+2q_1^2 q_2 - \frac{2}{3}q_2^3)
+```
 
 Solve this problem using the `HamiltonianProblem` constructor from DiffEqPhysics.jl.
 

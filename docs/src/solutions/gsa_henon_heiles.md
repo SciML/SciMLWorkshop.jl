@@ -2,7 +2,9 @@
 
 ## Part 1: Implementing the Henon-Heiles System (B)
 
-```julia
+```@example henon
+using DifferentialEquations, Plots, DiffEqPhysics
+
 function henon(dz,z,p,t)
   p₁, p₂, q₁, q₂ = z[1], z[2], z[3], z[4]
   dp₁ = -q₁*(1 + 2q₂)
@@ -23,7 +25,7 @@ plot(sol, vars=[(3,4,1)], tspan=(0,100))
 
 ## (Optional) Part 2: Alternative Dynamical Implmentations of Henon-Heiles (B)
 
-```julia
+```@example henon
 function henon(ddz,dz,z,p,t)
   p₁, p₂ = dz[1], dz[2]
   q₁, q₂ = z[1], z[2]
@@ -51,7 +53,7 @@ plot(sol, vars=[(3,4)], tspan=(0,100))
 ## Part 3: Parallelized Ensemble Solving
 
 In order to solve with an ensamble we need some initial conditions.
-```julia
+```@example henon
 function generate_ics(E,n)
   # The hardcoded values bellow can be estimated by looking at the
   # figures in the Henon-Heiles 1964 article
@@ -94,18 +96,18 @@ return `nothing`.
 ```julia
 using DiffEqGPU
 
-function henon_gpu(dz,z,p,t)
+function henon_gpu(z,p,t)
   @inbounds begin
-    dz[1] = -z[3]*(1 + 2z[4])
-    dz[2] = -z[4]-(z[3]^2 - z[4]^2)
-    dz[3] = z[1]
-    dz[4] = z[2]
+    dz1 = -z[3]*(1 + 2z[4])
+    dz2 = -z[4]-(z[3]^2 - z[4]^2)
+    dz3 = z[1]
+    dz4 = z[2]
   end
-  return nothing
+  return SA[dz1,dz2,dz3,dz4]
 end
 
-z0 = generate_ics(0.125f0, 50)
+z0 = SA[generate_ics(0.125f0, 50)...]
 prob_gpu = ODEProblem(henon_gpu, Float32.(u₀), (0.f0, 1000.f0))
 ensprob = EnsembleProblem(prob_gpu, prob_func=prob_func)
-sim = solve(ensprob, Tsit5(), EnsembleGPUArray(), trajectories=length(z0))
+sim = solve(ensprob, GPUTsit5(), EnsembleGPUKernel(), trajectories=length(z0))
 ```

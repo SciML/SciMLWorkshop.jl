@@ -1,4 +1,4 @@
-# Investigating Sources of Randomness and Uncertainty in a Stiff Biological System
+# Investigating Sources of Randomness and Uncertainty in a Stiff Biological System (B)
 
 ```julia
 using DifferentialEquations
