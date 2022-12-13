@@ -1,4 +1,4 @@
-# Controlling a DC Motor (A)
+# Controlling a DC Motor (E)
 
 ```@example dc_motor
 using ModelingToolkit, DifferentialEquations, Plots, ControlSystemsBase
