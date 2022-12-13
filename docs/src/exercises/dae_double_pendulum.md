@@ -16,7 +16,9 @@ A mass-matrix ordinary differential equation (ODE) is an ODE where the
 left-hand side, the derivative side, is multiplied by a matrix known as the
 mass matrix. This is described as:
 
-$$Mu' = f(u,p,t)$$
+```math
+Mu' = f(u,p,t)
+```
 
 where $M$ is the mass matrix. When $M$ is invertible, there is an ODE which is
 equivalent to this formulation. When $M$ is not invertible, this can have a
@@ -24,10 +26,13 @@ distinctly different behavior and is as Differential-Algebraic Equation (DAE).
 
 Solve the Robertson DAE:
 
-$$\begin{align}
+```math
+\begin{align*}
 \frac{dy_1}{dt} &= -0.04y_1 + 10^4 y_2y_3\\
 \frac{dy_2}{dt} &=  0.04y_1 - 10^4 y_2y_3 - 3\times 10^7 y_2^2\\
-1 &= y_1 + y_2 + y_3\end{align}$$
+1 &= y_1 + y_2 + y_3
+\end{align*}
+```
 
 with $y(0) = [1,0,0]$ and $dy(0) = [-0.04,0.04,0.0]$ using the mass-matrix
 formulation and `Rodas5()`. Use the
@@ -56,13 +61,13 @@ Consider the index 3 DAE system of the cartesian pendulum.
 After writing down the force equations in both directions,
 we arrive at the following DAE:
 
-$$
-\begin{align}
+```math
+\begin{align*}
 m\ddot{x} &= \frac{x}{L}T \\
 m\ddot{y} &= \frac{y}{L}T - mg \\
 x^2 + y^2 &= L
-\end{align}
-$$
+\end{align*}
+```
 
 Notice that we don't have an equation describing the
 behaviour of `T`. Let us now perform index reduction to
@@ -72,6 +77,7 @@ Differentiate this third equation twice with respect to time
 to reduce it from index 3 to index 1.
 
 ## Part 4: Single Pendulum Solution with IDA
+
 Write these equations in implicit form and solve the system using
 IDA.
 
@@ -79,15 +85,16 @@ IDA.
 
 The following equations describe a double
 pendulum system:
-$$
-\begin{align}
+
+```math
+\begin{align*}
 m_2\ddot{x_2} &= \frac{x_2}{L_2}T_2 \\
 m_2\ddot{y_2} &= \frac{y_2}{L_2}T_2 - m_2g \\
 {x_2}^2 + {y_2}^2 &= L_2 \\
 m_1\ddot{x_1} &= \frac{x_1}{L_1}T_1 - \frac{x_2}{L_2}T_2 \\
 m_2\ddot{y_1} &= \frac{y_1}{L_1}T_2 - m_1g - \frac{y_2}{L_2}T_2 \\
 {x_1}^2 + {y_1}^2 &= L_1 \\
-\end{align}
-$$
+\end{align*}
+```
 
 Perform index reduction and solve it like in the previous example.

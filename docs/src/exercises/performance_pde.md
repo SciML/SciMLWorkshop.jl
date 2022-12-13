@@ -11,27 +11,39 @@ looking deep into solver options and benchmarking.
 
 The Brusselator PDE is defined as follows:
 
-$$\begin{align}
+```math
+\begin{align*}
 \frac{\partial u}{\partial t} &= 1 + u^2v - 4.4u + \alpha(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}) + f(x, y, t)\\
-\frac{\partial v}{\partial t} &= 3.4u - u^2v + \alpha(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2})\end{align}$$
+\frac{\partial v}{\partial t} &= 3.4u - u^2v + \alpha(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2})\end{align*}
+```
 
 where
 
-$$f(x, y, t) = \begin{cases}
+```math
+f(x, y, t) =
+\begin{cases}
 5 & \quad \text{if } (x-0.3)^2+(y-0.6)^2 ≤ 0.1^2 \text{ and } t ≥ 1.1 \\
-0 & \quad \text{else}\end{cases}$$
+0 & \quad \text{else}
+\end{cases}
+```
 
 and the initial conditions are
 
-$$\begin{align}
+```math
+\begin{align*}
 u(x, y, 0) &= 22\cdot y(1-y)^{3/2} \\
-v(x, y, 0) &= 27\cdot x(1-x)^{3/2}\end{align}$$
+v(x, y, 0) &= 27\cdot x(1-x)^{3/2}
+\end{align*}
+```
 
 with the periodic boundary condition
 
-$$\begin{align}
+```math
+\begin{align*}
 u(x+1,y,t) &= u(x,y,t) \\
-u(x,y+1,t) &= u(x,y,t)\end{align}$$
+u(x,y+1,t) &= u(x,y,t)
+\end{align*}
+```
 
 on a timespan of $t \in [0,22]$.
 

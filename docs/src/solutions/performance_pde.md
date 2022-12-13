@@ -2,7 +2,7 @@
 
 ## Part 1: Implementing the BRUSS PDE System as ODEs
 
-```julia
+```@example performance_pde
 using DifferentialEquations, Sundials, Plots
 
 # initial condition
@@ -69,12 +69,15 @@ end
 
 prob1 = ODEProblem(brusselator_2d_op, u0, tspan, (D2, tmp, p))
 
-sol1 = @time solve(prob1, TRBDF2(autodiff=false));
+sol1 = solve(prob1, TRBDF2(autodiff=false))
+using BenchmarkTools
+@btime solve(prob1, TRBDF2(autodiff=false));
+return nothing #hide
 ```
 
 Visualizing the solution (works best in a terminal):
 
-```{julia;eval=false}
+```@example performance_pde
 @gif for t in sol1.t[1]:0.1:sol1.t[end]
     off = N^2
     solt = sol1(t)
@@ -84,10 +87,9 @@ Visualizing the solution (works best in a terminal):
 end
 ```
 
-
 ## Part 2: Optimizing the BRUSS Code
 
-```julia
+```@example performance_pde
 function brusselator_2d_loop(du, u, p, t)
     A, B, α, xyd = p
     dx = step(xyd)
@@ -125,22 +127,26 @@ function brusselator_2d_loop(du, u, p, t)
 end
 
 prob2 = ODEProblem(brusselator_2d_loop, u0, tspan, p)
-
-sol2 = @time solve(prob2, TRBDF2())
-sol2_2 = @time solve(prob2, CVODE_BDF())
+@btime solve(prob2, TRBDF2());
+return nothing #hide
+```
+```@example performance_pde
+@btime solve(prob2, CVODE_BDF());
+return nothing #hide
 ```
 
 ## Part 3: Exploiting Jacobian Sparsity with Color Differentiation
 
-```julia
-using SparseDiffTools, SparsityDetection
+```@example performance_pde
+using Symbolics, SparseDiffTools
 
-sparsity_pattern = jacobian_sparsity(brusselator_2d_loop,similar(u0),u0,p,2.0)
+sparsity_pattern = Symbolics.jacobian_sparsity(brusselator_2d_loop,similar(u0),u0,p,2.0)
 jac_sp = sparse(sparsity_pattern)
 jac = Float64.(jac_sp)
 colors = matrix_colors(jac)
 prob3 = ODEProblem(ODEFunction(brusselator_2d_loop, colorvec=colors,jac_prototype=jac_sp), u0, tspan, p)
-sol3 = @time solve(prob3, TRBDF2())
+@btime solve(prob3, TRBDF2());
+return nothing #hide
 ```
 
 ## (Optional) Part 4: Structured Jacobians
@@ -168,7 +174,7 @@ sol_cvodebdf = @time solve(prob2, CVODE_BDF(linear_solver=:GMRES));
 
 ## Part 7: Exploring IMEX and Exponential Integrator Techniques (E)
 
-```julia
+```@example performance_pde
 function laplacian2d(du, u, p, t)
     A, B, α, xyd = p
     dx = step(xyd)
@@ -216,12 +222,19 @@ function brusselator_reaction(du, u, p, t)
     nothing
 end
 prob7 = SplitODEProblem(laplacian2d, brusselator_reaction, u0, tspan, p)
-sol7 = @time solve(prob7, KenCarp4())
+@btime solve(prob7, KenCarp4());
+return nothing #hide
+```
+```julia
 M = MatrixFreeOperator((du,u,p)->laplacian2d(du, u, p, 0), (p,), size=(2*N^2, 2*N^2), opnorm=1000)
 prob7_2 = SplitODEProblem(M, brusselator_reaction, u0, tspan, p)
-sol7_2 = @time solve(prob7_2, ETDRK4(krylov=true), dt=1)
+@btime solve(prob7_2, ETDRK4(krylov=true), dt=1);
+return nothing #hide
+```
+```julia
 prob7_3 = SplitODEProblem(DiffEqArrayOperator(Op), brusselator_reaction, u0, tspan, p)
-sol7_3 = solve(prob7_3, KenCarp4());
+@btime solve(prob7_3, KenCarp4());
+return nothing #hide
 ```
 
 ## Part 8: Work-Precision Diagrams for Benchmarking Solver Choices
