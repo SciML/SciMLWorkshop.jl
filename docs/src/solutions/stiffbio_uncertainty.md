@@ -1,6 +1,6 @@
-# Investigating Sources of Randomness and Uncertainty in a Stiff Biological System
+# Investigating Sources of Randomness and Uncertainty in a Stiff Biological System (B)
 
-```julia
+```@example stiffbio
 using DifferentialEquations
 using Sundials
 using BenchmarkTools
@@ -9,7 +9,7 @@ using Plots
 
 ## Part 1: Simulating the Oregonator ODE model
 
-```julia
+```@example stiffbio
 using DifferentialEquations, Plots
 function orego(du,u,p,t)
   s,q,w = p
@@ -24,20 +24,22 @@ sol = solve(prob)
 plot(sol)
 ```
 
-```julia
-plot(sol,vars=(1,2,3))
+```@example stiffbio
+plot(sol,idxs=(1,2,3))
 ```
 
 ## Part 2: Investigating Stiffness
 
-```julia
+```@example stiffbio
 using BenchmarkTools
 prob = ODEProblem(orego,[1.0,2.0,3.0],(0.0,50.0),p)
-@btime sol = solve(prob,Tsit5())
+@btime sol = solve(prob,Tsit5());
+return nothing #hide
 ```
 
-```julia
-@btime sol = solve(prob,Rodas5())
+```@example stiffbio
+@btime sol = solve(prob,Rodas5());
+return nothing #hide
 ```
 
 ## (Optional) Part 3: Specifying Analytical Jacobians (I)
@@ -46,7 +48,7 @@ prob = ODEProblem(orego,[1.0,2.0,3.0],(0.0,50.0),p)
 
 ## Part 5: Adding stochasticity with stochastic differential equations
 
-```julia
+```@example stiffbio
 function orego(du,u,p,t)
   s,q,w = p
   y1,y2,y3 = u
@@ -65,11 +67,11 @@ sol = solve(prob,SOSRI())
 plot(sol)
 ```
 
-```julia
+```@example stiffbio
 sol = solve(prob,ImplicitRKMil()); plot(sol)
 ```
 
-```julia
+```@example stiffbio
 sol = solve(prob,ImplicitRKMil()); plot(sol)
 ```
 
@@ -79,7 +81,7 @@ sol = solve(prob,ImplicitRKMil()); plot(sol)
 
 The data was generated with:
 
-```julia
+```@example stiffbio
 function orego(du,u,p,t)
   s,q,w = p
   y1,y2,y3 = u
@@ -90,6 +92,7 @@ end
 p = [60.0,1e-5,0.2]
 prob = ODEProblem(orego,[1.0,2.0,3.0],(0.0,30.0),p)
 sol = solve(prob,Rodas5(),abstol=1/10^14,reltol=1/10^14)
+plot(sol)
 ```
 
 ## (Optional) Part 8: Using DiffEqBiological's Reaction Network DSL

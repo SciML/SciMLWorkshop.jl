@@ -13,11 +13,11 @@ The deterministic ODE formulation of the Oregonator is
 given by the equations
 
 ```math
-\begin{align}
+\begin{align*}
 \frac{dx}{dt} &= s(y-xy + x - qx^2)\\
 \frac{dy}{dt} &= (-y - xy + z)/s\\
 \frac{dz}{dt} &= w(x - z)
-\end{align}
+\end{align*}
 ```
 
 with parameter values $s=77.27$, $w=0.161$, and $q=8.375 \times 10^{-6}$, and
@@ -73,11 +73,11 @@ differential equation formulation of this model is known as the multiplicative
 noise model, is created with:
 
 ```math
-\begin{align}
+\begin{align*}
 dx &= s(y-xy + x - qx^2)dt + \sigma_1 x dW_1\\
 dy &= \frac{-y - xy + z}{s}dt + \sigma_2 y dW_2\\
 dz &= w(x - z)dt + \sigma_3 z dW_3
-\end{align}
+\end{align*}
 ```
 
 with $\sigma_i = 0.1$ where the `dW` terms describe a Brownian motion, a
