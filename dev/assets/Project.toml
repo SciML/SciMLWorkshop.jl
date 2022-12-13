@@ -20,8 +20,10 @@ Sundials = "c3572dad-4567-51f8-b174-8c6c989267f4"
 Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
 
 [compat]
+DiffEqDevTools = "2"
 DifferentialEquations = "7.6"
 Documenter = "0.27"
+JumpProcesses = "9"
 Plots = "1"
 Sundials = "4.11.3"
 Symbolics = "4"
