@@ -1,4 +1,4 @@
-# Controlling a DC Motor (A)
+# Controlling a DC Motor (E)
 
 ## Part 1 (Optional): Build the DC Motor System using the ModelingToolkit Standard Library
 
