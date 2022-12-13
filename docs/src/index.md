@@ -49,6 +49,9 @@ The exercises are described as follows:
 - Exercise 8 takes the user through training a neural stochastic differential
   equation, using GPU-accleration and adjoints through Flux.jl's neural
   network framework to build efficient training codes.
+- Exercise 9 is a deep dive into controls analysis on nonlinear models. The
+  user starts by building an acausal model of a DC motor, which is augmented
+  with a PI-controller that is tuned to control the actions of the motor.
 
 This exercise worksheet is meant to be a living document leading new users through
 a deep dive of the SciML feature set. If you further suggestions
