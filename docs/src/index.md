@@ -17,30 +17,36 @@ take some work.
 
 The exercises are described as follows:
 
-- Exercise 1 takes the user through solving a stiff ordinary differential equation
+- Exercise 1 is solving a simple stiff ordinary differential equation. This is an
+  introductory exercise to get users acquainted with the syntax.
+- Exercise 2 takes the user through solving a stiff ordinary differential equation
   and using the ModelingToolkit.jl to automatically convert the function to a
   symbolic form to derive the analytical Jacobian to speed up the solver. The
   same biological system is then solved with stochasticity, utilizing
   EnsembleProblems to understand 95% bounds on the solution. Finally,
   probabilistic programming is employed to perform Bayesian parameter estimation
   of the parameters against data.
-- Exercise 2 takes the user through defining hybrid delay differential equation,
+- Exercise 3 takes the user through defining hybrid delay differential equation,
   that is a differential equation with events, and using differentiable programming
   techniques (automatic differentiation) to to perform gradient-based parameter
   estimation.
-- Exercise 3 takes the user through differential-algebraic equation (DAE)
+- Exercise 4 takes the user through differential-algebraic equation (DAE)
   modeling, the concept of index, and using both mass-matrix and implicit
   ODE representations. This will require doing a bit of math, but the student
   will understand how to change their equations to make their DAE numerically
   easier for the integrators.
-- Exercise 4 takes the user through optimizing a PDE solver, utilizing
+- Exercise 5 has one build an acausal model, a DAE system through a component-based
+  modeling approach. Using a tutorial model of an RC circuit (resistor and capacitor)
+  plus some information about inductors, the user then builds new ModelingToolkit
+  components for an inductor and generates an RLC circuit to be simulated.
+- Exercise 6 takes the user through optimizing a PDE solver, utilizing
   automatic sparsity pattern recognition, automatic conversion of numerical
   codes to symbolic codes for analytical construction of the Jacobian,
   preconditioned GMRES, and setting up a solver for IMEX and GPUs, and compute
   adjoints of PDEs.
-- Exercise 5 focuses on a chaotic orbit, utilizing parallel ensembles across
+- Exercise 7 focuses on a chaotic orbit, utilizing parallel ensembles across
   supercomputers and GPUs to quickly describe phase space.
-- Exercise 6 takes the user through training a neural stochastic differential
+- Exercise 8 takes the user through training a neural stochastic differential
   equation, using GPU-accleration and adjoints through Flux.jl's neural
   network framework to build efficient training codes.
 
