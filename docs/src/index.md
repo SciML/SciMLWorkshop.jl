@@ -46,8 +46,8 @@ The exercises are described as follows:
 
 This exercise worksheet is meant to be a living document leading new users through
 a deep dive of the SciML feature set. If you further suggestions
-or want to contribute new problems, please open an issue or PR at the
-SciMLWorkshop.jl repository.
+or want to contribute new problems, please 
+[open an issue or PR at the SciMLWorkshop.jl repository](https://github.com/SciML/SciMLWorkshop.jl).
 
 ## Reproducibility
 ```@raw html
