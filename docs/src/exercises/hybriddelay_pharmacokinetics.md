@@ -22,9 +22,10 @@ where the events take place at fixed times. The ODE we will use is known as
 the one-compartment model:
 
 ```math
-\begin{align}
+\begin{align*}
 \frac{d[Depot]}{dt} &= -K_a [Depot] + R\\
-\frac{d[Central]}{dt} &= K_a [Depot] - K_e [Central]\end{align}
+\frac{d[Central]}{dt} &= K_a [Depot] - K_e [Central]
+\end{align*}
 ```
 
 with $t \in [0,90]$, $u_0 = [100.0,0]$, and $p=[K_a,K_e]=[2.268,0.07398]$.
@@ -43,9 +44,10 @@ central compartment. This effectively delays the effect of the transition from
 differential equation which utilizes a fixed time delay $\tau$:
 
 ```math
-\begin{align}
+\begin{align*}
 \frac{d[Depot]}{dt} &= -K_a [Depot](t)\\
-\frac{d[Central]}{dt} &= K_a [Depot](t-\tau) - K_e [Central]\end{align}
+\frac{d[Central]}{dt} &= K_a [Depot](t-\tau) - K_e [Central]
+\end{align*}
 ```
 
 where the parameter $τ = 6.0$.

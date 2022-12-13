@@ -17,30 +17,10 @@ makedocs(strict = [
              # :autodocs_block, :cross_references, :docs_block, :eval_block, :example_block, :footnote, :meta_block, :missing_docs, :setup_block
          ],
          doctest = false, clean = true,
-         format = Documenter.HTML(analytics = "UA-90474609-3",
-                                  assets = ["assets/favicon.ico"],
+         format = Documenter.HTML(assets = ["assets/favicon.ico"],
                                   canonical = "https://docs.sciml.ai/SciMLWorkshop/stable/"),
          sitename = "SciML Workshop",
          authors = "Chris Rackauckas",
          pages = pages)
-
-#Redirect old links
-# cd(joinpath(@__DIR__, "build")) do
-#     for (root, dirs, files) in walkdir(".")
-#         for file in files
-#             path = relpath(joinpath(root, file), ".")
-#             m = match(r"(.+)/index\.html$", path)
-#             m === nothing && continue
-#             redirect = "$(m[1]).html"
-#             @info "Adding redirect for $(m[1]) from $(redirect)"
-#             isfile(redirect) && (@warn "$redirect exists, skip"; continue)
-#             open(redirect, "w") do io
-#                 write(io, """
-#                 <meta http-equiv="refresh" content="0; url=$(basename(m[1]))/"/>
-#                 """)
-#             end
-#         end
-#     end
-# end
 
 deploydocs(repo = "github.com/SciML/SciMLWorkshop.jl.git")

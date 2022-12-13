@@ -75,15 +75,14 @@ sys = structural_simplify(model)
 prob = ODEProblem(sys, [], (0, 6.0))
 sol = solve(prob, Rodas4())
 
-p1 = Plots.plot(sol.t, sol[motor.inertia.w], ylabel = "Angular Vel. in rad/s",
+p1 = plot(sol.t, sol[motor.inertia.w], ylabel = "Angular Vel. in rad/s",
                 label = "Measurement", title = "DC Motor with Speed Controller")
 Plots.plot!(sol.t, sol[ref.output.u], label = "Reference")
-p2 = Plots.plot(sol.t, sol[motor.load.tau.u], ylabel = "Disturbance in Nm", label = "")
-Plots.plot(p1, p2, layout = (2, 1))
+p2 = plot(sol.t, sol[motor.load.tau.u], ylabel = "Disturbance in Nm", label = "")
 
 mat, simplified_sys = get_sensitivity(model, :y);
 S = ss(mat...);
 bplot = bodeplot(S, plotphase=false)
 nplot = nyquistplot(-ss(get_looptransfer(model, :u)[1]...))
-Plots.plot(p1, p2, bplot, nplot, layout = (2, 2))
+plot(p1, p2, bplot, nplot, layout = (2, 2))
 ```

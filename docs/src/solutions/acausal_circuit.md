@@ -90,7 +90,7 @@ rlc_eqs = [
           connect(capacitor.n, ground.g)
          ]
 
-@named _rlc_model = ODESystem(rlc_eqs, t)
+@named _rlc_model = ODESystem(rlc_eqs, RLC.t)
 @named rlc_model = compose(_rlc_model,
                           [inductor, resistor, capacitor, source, ground])
 sys = structural_simplify(rlc_model)

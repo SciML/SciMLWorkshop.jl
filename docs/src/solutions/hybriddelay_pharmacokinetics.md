@@ -1,8 +1,10 @@
-Fitting Hybrid Delay Pharmacokinetic Models with Automated Responses (B)
+# Fitting Hybrid Delay Pharmacokinetic Models with Automated Responses (B)
 
 ## Part 1: Defining an ODE with Predetermined Doses
 
-```julia
+```@example hybriddelay
+using DifferentialEquations
+using Plots
 function onecompartment(du,u,p,t)
   Ka,Ke = p
   du[1] = -Ka*u[1]
@@ -21,7 +23,7 @@ plot(sol)
 
 ## Part 2: Adding Delays
 
-```julia
+```@example hybriddelay
 function onecompartment_delay(du,u,h,p,t)
   Ka,Ke,τ = p
   delayed_depot = h(p,t-τ)[1]
@@ -46,7 +48,7 @@ plot(sol)
 
 The data was generated with
 
-```julia
+```@example hybriddelay
 p = (Ka = 0.5, Ke = 0.1, τ = 4.0)
 ```
 

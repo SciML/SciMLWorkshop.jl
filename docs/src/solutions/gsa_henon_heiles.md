@@ -20,7 +20,7 @@ u₀ = [0.1, 0.0, 0.0, 0.5]
 prob = ODEProblem(henon, u₀, (0., 1000.))
 sol = solve(prob, Vern9(), abstol=1e-14, reltol=1e-14)
 
-plot(sol, vars=[(3,4,1)], tspan=(0,100))
+plot(sol, idxs=[(3,4,1)], tspan=(0,100))
 ```
 
 ## (Optional) Part 2: Alternative Dynamical Implmentations of Henon-Heiles (B)
@@ -41,13 +41,14 @@ prob2 = SecondOrderODEProblem(henon, p₀, q₀, (0., 1000.))
 sol = solve(prob2, DPRKN6(), abstol=1e-10, reltol=1e-10)
 
 plot(sol, vars=[(3,4)], tspan=(0,100))
-
+```
+```@example henon
 H(p, q, params) = 1/2 * (p[1]^2 + p[2]^2) + 1/2 * (q[1]^2 + q[2]^2 + 2q[1]^2 * q[2] - 2/3*q[2]^3)
 
 prob3 = HamiltonianProblem(H, p₀, q₀, (0., 1000.))
 sol = solve(prob3, DPRKN6(), abstol=1e-10, reltol=1e-10)
 
-plot(sol, vars=[(3,4)], tspan=(0,100))
+plot(sol, idxs=[(3,4)], tspan=(0,100))
 ```
 
 ## Part 3: Parallelized Ensemble Solving
@@ -83,7 +84,7 @@ end
 ensprob = EnsembleProblem(prob, prob_func=prob_func)
 sim = solve(ensprob, Vern9(), EnsembleThreads(), trajectories=length(z0))
 
-plot(sim, vars=(3,4), tspan=(0,10))
+plot(sim, idxs=(3,4), tspan=(0,10))
 ```
 
 ## Part 4: Parallelized GPU Ensemble Solving
