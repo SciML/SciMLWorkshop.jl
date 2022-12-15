@@ -3,7 +3,7 @@
 In this problem we will walk through the basics of simulating models with
 DifferentialEquations.jl. Let's take the
 [Oregonator model of the Belousov-Zhabotinskii chemical reaction system](https://www.radford.edu/~thompson/vodef90web/problems/demosnodislin/Demos_Pitagora/DemoOrego/demoorego.pdf).
-This system describes a classical example in non-equilibrium thermodynmics
+This system describes a classical example in non-equilibrium thermodynamics
 and is a well-known natural chemical oscillator.
 
 ## Part 1: Simulating the Oregonator ODE model
@@ -67,7 +67,7 @@ embedded analytical solution.
 
 ## Part 5: Adding stochasticity with stochastic differential equations
 
-How does this system react in the presense of stochasticity? We can investigate
+How does this system react in the presence of stochasticity? We can investigate
 this question by using stochastic differential equations. A stochastic
 differential equation formulation of this model is known as the multiplicative
 noise model, is created with:
@@ -112,7 +112,7 @@ A+X -> 2X + 2Z
 B + Z -> Y
 ```
 
-where reactions take place at a rate which is propoertional to its components,
+where reactions take place at a rate which is proportional to its components,
 i.e. the first reaction has a rate `k*A*Y` for some `k`.
 Use the [tutorial on Gillespie SSA models](https://docs.sciml.ai/JumpProcesses/stable/tutorials/discrete_stochastic_example/)
 to implement the `JumpProblem` for this model, and use the `EnsembleProblem`
@@ -148,7 +148,7 @@ parallelism section for details on how to accelerate this.
 ## (Optional) Part 8: Using Catalyst's Reaction Network DSL
 
 Catalyst.jl is a helper library for the DifferentialEquations.jl
-ecosystem for defining chemical reaction systems at a high leevel for easy
+ecosystem for defining chemical reaction systems at a high level for easy
 simulation in these various forms. Use the descrption
 [from the Chemical Reaction Networks documentation page](https://docs.sciml.ai/Catalyst/stable/)
 to build a reaction network and generate the ODE/SDE/jump equations, and

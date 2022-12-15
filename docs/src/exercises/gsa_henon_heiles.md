@@ -23,7 +23,7 @@ The Henon-Heiles Hamiltonian system is described by the ODEs:
 with initial conditions $u_0 = [0.1,0.0,0.0,0.5]$.
 Solve this system over the timespan $t\in[0,1000]$
 
-## (Optional) Part 2: Alternative Dynamical Implmentations of Henon-Heiles (B)
+## (Optional) Part 2: Alternative Dynamical Implementations of Henon-Heiles (B)
 
 The Henon-Heiles defines a Hamiltonian system with certain structures which
 can be utilized for a more efficient solution. Use [the Dynamical problems page](https://docs.sciml.ai/dev/types/dynamical_types)
@@ -63,4 +63,4 @@ for more details on the setup.
 
 Setup the CUDAnative.jl library and use the `EnsembleGPUArray()` method to
 parallelize the solution across the thousands of cores of a GPU. Note that
-this will efficiency solve for hundreds of thousands of trajectores.
+this will efficiency solve for hundreds of thousands of trajectories.

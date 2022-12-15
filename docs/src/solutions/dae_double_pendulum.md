@@ -103,7 +103,7 @@ sol = solve(prob, IDA())
 plot(sol, idxs=(3,4))
 ```
 
-## Part 5: Solving the Double Penulum DAE System
+## Part 5: Solving the Double Pendulum DAE System
 For the double pendulum:
 The equations for the second ball are the same
 as the single pendulum case. That is, the equations
