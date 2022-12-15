@@ -47,7 +47,7 @@ The exercises are described as follows:
 - Exercise 7 focuses on a chaotic orbit, utilizing parallel ensembles across
   supercomputers and GPUs to quickly describe phase space.
 - Exercise 8 takes the user through training a neural stochastic differential
-  equation, using GPU-accleration and adjoints through Flux.jl's neural
+  equation, using GPU-acceleration and adjoints through Flux.jl's neural
   network framework to build efficient training codes.
 - Exercise 9 is a deep dive into controls analysis on nonlinear models. The
   user starts by building an acausal model of a DC motor, which is augmented

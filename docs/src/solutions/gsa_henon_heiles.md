@@ -23,7 +23,7 @@ sol = solve(prob, Vern9(), abstol=1e-14, reltol=1e-14)
 plot(sol, idxs=[(3,4,1)], tspan=(0,100))
 ```
 
-## (Optional) Part 2: Alternative Dynamical Implmentations of Henon-Heiles (B)
+## (Optional) Part 2: Alternative Dynamical Implementations of Henon-Heiles (B)
 
 ```@example henon
 function henon(ddz,dz,z,p,t)
@@ -53,7 +53,7 @@ plot(sol, idxs=[(3,4)], tspan=(0,100))
 
 ## Part 3: Parallelized Ensemble Solving
 
-In order to solve with an ensamble we need some initial conditions.
+In order to solve with an ensemble we need some initial conditions.
 ```@example henon
 function generate_ics(E,n)
   # The hardcoded values bellow can be estimated by looking at the

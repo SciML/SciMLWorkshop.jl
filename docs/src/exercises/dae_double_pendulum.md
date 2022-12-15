@@ -1,8 +1,8 @@
 # Differential-Algebraic Equation Modeling of a Double Pendulum (B)
 
-Differential-Algebraic Equaton (DAE) systems are like ODEs but allow for adding
+Differential-Algebraic Equation (DAE) systems are like ODEs but allow for adding
 constraints into the models. This problem will look at solving the double
-penulum problem with enforcement of the rigid body constraints, requiring that
+pendulum problem with enforcement of the rigid body constraints, requiring that
 the total distance `L` is constant throughout the simulation. While these
 equations can be rewritten in an ODE form, in many cases it can be simpler
 to solve the equation directly with the constraints. This tutorial will
@@ -81,7 +81,7 @@ to reduce it from index 3 to index 1.
 Write these equations in implicit form and solve the system using
 IDA.
 
-## Part 5: Solving the Double Penulum DAE System
+## Part 5: Solving the Double Pendulum DAE System
 
 The following equations describe a double
 pendulum system:

@@ -13,7 +13,7 @@ the ODE's solution against data as a loss.
 In this example we will define and train various forms of neural differential
 equations. Note that all of the differential equation types are compatible with
 neural differential equations, so this is only going to scratch the surface of
-the possibilites!
+the possibilities!
 
 ## Part 1: Constructing and Training a Basic Neural ODE
 

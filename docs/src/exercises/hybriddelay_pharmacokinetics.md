@@ -58,10 +58,10 @@ to define and solve this delayed version of the hybrid model.
 
 In order to fit parameters $(K_a,K_e,\tau)$ we will want to be able to calculate
 the gradient of the solution with respect to the initial conditions. One way to
-do this is via Automatic Differentition (AD). For small numbers of parameters
-(<100), it is fastest to use Forward-Mode Automatic Differentition
+do this is via Automatic Differentiation (AD). For small numbers of parameters
+(<100), it is fastest to use Forward-Mode Automatic Differentiation
 (even faster than using adjoint sensitivity analysis!). Thus for this problem
-we will make use of ForwardDiff.jl to use Dual number arithmetic to retrive
+we will make use of ForwardDiff.jl to use Dual number arithmetic to retrieve
 both the solution and its derivative w.r.t. parameters in a single solve.
 
 [Use the information from the page on local sensitvity analysis](https://docs.sciml.ai/dev/analysis/sensitivity)
