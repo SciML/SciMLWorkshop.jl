@@ -9,6 +9,20 @@ y2,\;...,\; y7 &= 0 \\
 y8 &= 0.0057,
 \end{align*}
 ```
+
+And parameter values:
+
+```math
+\begin{align*}
+k1 &= 1.71\\
+k2 &= 280\\
+k3 &= 8.32\\
+k4 &= 0.69\\
+k5 &= 0.43\\
+k6 &= 1.81,
+\end{align*}
+```
+
 solve on the interval $t\in [0, 321.8122]$, and plot the solution.
 
 ```math
