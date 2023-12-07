@@ -136,7 +136,7 @@ data = [1.0 2.05224 2.11422 2.1857 2.26827 2.3641 2.47618 2.60869 2.7677 2.96232
         3.0 2.82065 2.68703 2.58974 2.52405 2.48644 2.47449 2.48686 2.52337 2.58526 2.67563 2.80053 2.9713 3.21051 3.5712 4.23706 12.0266 14868.8 24987.8 23453.4 19202.2 15721.6 12872.0 10538.8 8628.66 7064.73 5784.29 4735.96 3877.66 3174.94 2599.6]
 ```
 
-[Follow the exmaples on the parameter estimation page](https://docs.sciml.ai/DiffEqBayes/dev/examples/)
+[Follow the examples on the parameter estimation page](https://docs.sciml.ai/DiffEqBayes/dev/examples/)
 to perform a Bayesian parameter estimation. What are the most likely parameters
 for the model given the posterior parameter distributions?
 
@@ -149,7 +149,7 @@ parallelism section for details on how to accelerate this.
 
 Catalyst.jl is a helper library for the DifferentialEquations.jl
 ecosystem for defining chemical reaction systems at a high level for easy
-simulation in these various forms. Use the descrption
+simulation in these various forms. Use the description
 [from the Chemical Reaction Networks documentation page](https://docs.sciml.ai/Catalyst/stable/)
 to build a reaction network and generate the ODE/SDE/jump equations, and
 compare the result to your handcoded versions.
