@@ -1,5 +1,6 @@
 # SciMLWorkshop: Workshop Materials for Training in Scientific Computing and Scientific Machine Learning (SciML)
 
+
 These exercises teach common workflows which involve SciML's tools like
 DifferentialEquations.jl, ModelingToolkit.jl, DiffEqFlux.jl, and the connections to parts
 like stochastic differential equations and Bayesian estimation.
