@@ -137,7 +137,10 @@ return nothing #hide
 
 ## Part 3: Exploiting Jacobian Sparsity with Color Differentiation
 
-```@example performance_pde
+Note: This example requires SparseDiffTools which is currently incompatible with Symbolics v7.
+The code is shown for reference.
+
+```julia
 using Symbolics, SparseDiffTools
 
 sparsity_pattern = Symbolics.jacobian_sparsity(brusselator_2d_loop,similar(u0),u0,p,2.0)
@@ -146,7 +149,6 @@ jac = Float64.(jac_sp)
 colors = matrix_colors(jac)
 prob3 = ODEProblem(ODEFunction(brusselator_2d_loop, colorvec=colors,jac_prototype=jac_sp), u0, tspan, p)
 @btime solve(prob3, TRBDF2());
-return nothing #hide
 ```
 
 ## (Optional) Part 4: Structured Jacobians
