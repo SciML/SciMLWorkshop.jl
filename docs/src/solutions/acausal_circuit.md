@@ -3,101 +3,28 @@
 ```@example rlc
 using ModelingToolkit
 using ModelingToolkit: t_nounits as t, D_nounits as D
+using ModelingToolkitStandardLibrary.Electrical
+using ModelingToolkitStandardLibrary.Blocks: Constant
 using DifferentialEquations, Plots
 
-# Define the Pin connector
-@connector Pin begin
-    v(t)
-    i(t), [connect = Flow]
-end
-
-# Ground component
-@mtkmodel Ground begin
-    @components begin
-        g = Pin()
-    end
-    @equations begin
-        g.v ~ 0
-    end
-end
-
-# OnePort base component (two-pin device)
-@mtkmodel OnePort begin
-    @components begin
-        p = Pin()
-        n = Pin()
-    end
-    @variables begin
-        v(t) = 0.0
-        i(t) = 0.0
-    end
-    @equations begin
-        v ~ p.v - n.v
-        0 ~ p.i + n.i
-        i ~ p.i
-    end
-end
-
-# Resistor component
-@mtkmodel Resistor begin
-    @extend OnePort()
-    @parameters begin
-        R = 1.0
-    end
-    @equations begin
-        v ~ i * R
-    end
-end
-
-# Capacitor component
-@mtkmodel Capacitor begin
-    @extend OnePort()
-    @parameters begin
-        C = 1.0
-    end
-    @equations begin
-        D(v) ~ i / C
-    end
-end
-
-# Inductor component
-@mtkmodel Inductor begin
-    @extend OnePort()
-    @parameters begin
-        L = 1.0
-    end
-    @equations begin
-        D(i) ~ v / L
-    end
-end
-
-# Constant voltage source
-@mtkmodel ConstantVoltage begin
-    @extend OnePort()
-    @parameters begin
-        V = 1.0
-    end
-    @equations begin
-        V ~ v
-    end
-end
-
-# RLC Circuit model
+# RLC Circuit using standard library components
 @mtkmodel RLCCircuit begin
     @structural_parameters begin
-        R = 1.0
-        L = 1.0
-        C = 1.0
-        V = 1.0
+        R_val = 1.0
+        L_val = 1.0
+        C_val = 1.0
+        V_val = 1.0
     end
     @components begin
-        resistor = Resistor(R = R)
-        inductor = Inductor(L = L)
-        capacitor = Capacitor(C = C)
-        source = ConstantVoltage(V = V)
+        resistor = Resistor(R = R_val)
+        inductor = Inductor(L = L_val)
+        capacitor = Capacitor(C = C_val)
+        source = Voltage()
         ground = Ground()
+        constant = Constant(k = V_val)
     end
     @equations begin
+        connect(constant.output, source.V)
         connect(source.p, resistor.p)
         connect(resistor.n, inductor.p)
         connect(inductor.n, capacitor.p)
