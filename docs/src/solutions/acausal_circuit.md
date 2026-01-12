@@ -2,7 +2,7 @@
 
 ```@example rlc
 using ModelingToolkit
-using ModelingToolkit: t_nounits as t, D_nounits as D
+using ModelingToolkit: t_nounits as t, D_nounits as D, @mtkmodel, @mtkcompile
 using ModelingToolkitStandardLibrary.Electrical
 using ModelingToolkitStandardLibrary.Blocks: Constant
 using DifferentialEquations, Plots

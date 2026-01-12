@@ -2,7 +2,7 @@
 
 ```@example mtkchemical
 using ModelingToolkit
-using ModelingToolkit: t_nounits as t, D_nounits as D
+using ModelingToolkit: t_nounits as t, D_nounits as D, @mtkmodel, @mtkcompile
 using DifferentialEquations, Plots
 
 @mtkmodel HIRESModel begin
