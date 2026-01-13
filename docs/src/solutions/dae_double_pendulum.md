@@ -89,10 +89,11 @@ function f(out, da, a, p, t)
 end
 
 # Release pendulum from top right
+# State: [u, v, x, y, T] where u=dx/dt, v=dy/dt
 u0 = zeros(5)
-u0[3] = 1.0
+u0[3] = 1.0  # x = 1 (pendulum starts horizontal)
 du0 = zeros(5)
-du0[2] = 9.81
+du0[2] = -9.8  # dv = y*T/(m*L) - g = 0 - 9.8 = -9.8 (gravity accelerates downward)
 
 p = [1,1,9.8]
 tspan = (0.,100.)
@@ -170,12 +171,13 @@ function f(out, da, a, p, t)
 end
 
 # Release pendulum from top right
+# State: [u1, v1, x1, y1, T1, u2, v2, x2, y2, T2]
 u0 = zeros(10)
-u0[3] = 1.0
-u0[8] = 1.0
+u0[3] = 1.0   # x1 = 1 (first pendulum horizontal)
+u0[8] = 1.0   # x2 = 1 (second pendulum horizontal)
 du0 = zeros(10)
-du0[2] = 9.8
-du0[7] = 9.8
+du0[2] = -9.8   # dv2: gravity accelerates downward
+du0[7] = -9.8   # dv1: gravity accelerates downward
 
 p = [1,1,1,1,9.8]
 tspan = (0.,100.)

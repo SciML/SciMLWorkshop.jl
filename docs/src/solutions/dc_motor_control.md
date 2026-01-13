@@ -2,7 +2,8 @@
 
 ```@example dc_motor
 using ModelingToolkit
-using ModelingToolkit: t_nounits as t, D_nounits as D, @mtkmodel, @mtkcompile
+const t = ModelingToolkit.t_nounits
+const D = ModelingToolkit.D_nounits
 using DifferentialEquations, Plots, ControlSystemsBase
 using ModelingToolkitStandardLibrary.Electrical
 using ModelingToolkitStandardLibrary.Mechanical.Rotational
