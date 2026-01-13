@@ -70,7 +70,6 @@ u0 = [
     L1.i => 0.0,
     inertia.phi => 0.0,
     inertia.w => 0.0,
-    pi_controller.I.x => 0.0,
 ]
 prob = ODEProblem(sys, u0, (0, 6.0))
 sol = solve(prob, Rodas4())
