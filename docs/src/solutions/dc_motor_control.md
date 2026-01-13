@@ -65,7 +65,14 @@ eqs = [
 ])
 sys = mtkcompile(sys)
 
-prob = ODEProblem(sys, [], (0, 6.0))
+# Provide initial conditions to resolve cyclic guesses
+u0 = [
+    L1.i => 0.0,
+    inertia.phi => 0.0,
+    inertia.w => 0.0,
+    pi_controller.I.x => 0.0,
+]
+prob = ODEProblem(sys, u0, (0, 6.0))
 sol = solve(prob, Rodas4())
 
 p1 = plot(sol.t, sol[inertia.w], ylabel = "Angular Vel. in rad/s",
