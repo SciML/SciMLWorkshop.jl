@@ -135,20 +135,23 @@ return nothing #hide
 return nothing #hide
 ```
 
-## Part 3: Exploiting Jacobian Sparsity with Color Differentiation
+## Part 3: Exploiting Jacobian Sparsity with Automatic Sparsity Detection
 
-Note: This example requires SparseDiffTools which is currently incompatible with Symbolics v7.
-The code is shown for reference.
+We use `ADTypes.jacobian_sparsity` with `SparseConnectivityTracer` to automatically detect the sparsity pattern.
+This approach traces through the function to identify which matrix elements are accessed, returning a sparse pattern.
 
-```julia
-using Symbolics, SparseDiffTools
+```@example performance_pde
+import SparseConnectivityTracer, ADTypes
 
-sparsity_pattern = Symbolics.jacobian_sparsity(brusselator_2d_loop,similar(u0),u0,p,2.0)
-jac_sp = sparse(sparsity_pattern)
-jac = Float64.(jac_sp)
-colors = matrix_colors(jac)
-prob3 = ODEProblem(ODEFunction(brusselator_2d_loop, colorvec=colors,jac_prototype=jac_sp), u0, tspan, p)
+detector = SparseConnectivityTracer.TracerSparsityDetector()
+du0 = copy(u0)
+jac_sparsity = ADTypes.jacobian_sparsity(
+    (du, u) -> brusselator_2d_loop(du, u, p, 0.0), du0, u0, detector)
+
+f = ODEFunction(brusselator_2d_loop; jac_prototype = float.(jac_sparsity))
+prob3 = ODEProblem(f, u0, tspan, p)
 @btime solve(prob3, TRBDF2());
+return nothing #hide
 ```
 
 ## (Optional) Part 4: Structured Jacobians
@@ -157,21 +160,40 @@ prob3 = ODEProblem(ODEFunction(brusselator_2d_loop, colorvec=colors,jac_prototyp
 
 ## Part 6: Utilizing Preconditioned-GMRES Linear Solvers
 
-```julia
-using DiffEqOperators
-using Sundials
-using AlgebraicMultigrid: ruge_stuben, aspreconditioner, smoothed_aggregation
-prob6 = ODEProblem(ODEFunction(brusselator_2d_loop, jac_prototype=JacVecOperator{Float64}(brusselator_2d_loop, u0)), u0, tspan, p)
-II = Matrix{Float64}(I, N, N)
-Op = kron(Matrix{Float64}(I, 2, 2), kron(D2, II) + kron(II, D2))
-Wapprox = -I+Op
-#ml = ruge_stuben(Wapprox)
-ml = smoothed_aggregation(Wapprox)
-precond = aspreconditioner(ml)
-sol_trbdf2 = @time solve(prob6, TRBDF2(linsolve=LinSolveGMRES())); # no preconditioner
-sol_trbdf2 = @time solve(prob6, TRBDF2(linsolve=LinSolveGMRES(Pl=lu(Wapprox)))); # sparse LU
-sol_trbdf2 = @time solve(prob6, TRBDF2(linsolve=LinSolveGMRES(Pl=precond))); # AMG
-sol_cvodebdf = @time solve(prob2, CVODE_BDF(linear_solver=:GMRES));
+We use `KrylovJL_GMRES` with an incomplete LU factorization as a preconditioner.
+The `precs` callback receives the matrix `W = I - gamma*J` and returns preconditioners.
+
+```@example performance_pde
+import IncompleteLU, LinearSolve
+
+function incompletelu(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
+    if newW === nothing || newW
+        Pl = IncompleteLU.ilu(convert(AbstractMatrix, W), τ = 50.0)
+    else
+        Pl = Plprev
+    end
+    Pl, nothing
+end
+
+# Required for IncompleteLU to work with LinearSolve
+Base.eltype(::IncompleteLU.ILUFactorization{Tv, Ti}) where {Tv, Ti} = Tv
+
+# Using sparse Jacobian with GMRES and ILU preconditioner
+sol6 = solve(prob3,
+    KenCarp47(linsolve = LinearSolve.KrylovJL_GMRES(), precs = incompletelu,
+        concrete_jac = true); save_everystep = false)
+@btime solve(prob3,
+    KenCarp47(linsolve = LinearSolve.KrylovJL_GMRES(), precs = incompletelu,
+        concrete_jac = true); save_everystep = false);
+return nothing #hide
+```
+
+For comparison, Sundials CVODE_BDF with GMRES:
+
+```@example performance_pde
+sol_cvodebdf = solve(prob2, CVODE_BDF(linear_solver=:GMRES))
+@btime solve(prob2, CVODE_BDF(linear_solver=:GMRES));
+return nothing #hide
 ```
 
 ## Part 7: Exploring IMEX and Exponential Integrator Techniques (E)
@@ -241,21 +263,21 @@ return nothing #hide
 
 ## Part 8: Work-Precision Diagrams for Benchmarking Solver Choices
 
-```julia
+```@example performance_pde
 using DiffEqDevTools
 abstols = 0.1 .^ (5:8)
 reltols = 0.1 .^ (1:4)
-sol = solve(prob3,CVODE_BDF(linear_solver=:GMRES),abstol=1/10^7,reltol=1/10^10)
+sol = solve(prob3, CVODE_BDF(linear_solver=:GMRES), abstol=1/10^7, reltol=1/10^10)
 test_sol = TestSolution(sol)
-probs = [prob2, prob3, prob6]
-setups = [Dict(:alg=>CVODE_BDF(),:prob_choice => 1),
+probs = [prob2, prob3]
+setups = [Dict(:alg=>CVODE_BDF(), :prob_choice => 1),
           Dict(:alg=>CVODE_BDF(linear_solver=:GMRES), :prob_choice => 1),
           Dict(:alg=>TRBDF2(), :prob_choice => 1),
-          Dict(:alg=>TRBDF2(linsolve=LinSolveGMRES(Pl=precond)), :prob_choice => 3),
-          Dict(:alg=>TRBDF2(), :prob_choice => 2)
+          Dict(:alg=>TRBDF2(), :prob_choice => 2),
+          Dict(:alg=>KenCarp47(linsolve = LinearSolve.KrylovJL_GMRES(), precs = incompletelu, concrete_jac = true), :prob_choice => 2)
          ]
-labels = ["CVODE_BDF (dense)" "CVODE_BDF (GMRES)" "TRBDF2 (dense)" "TRBDF2 (sparse)" "TRBDF2 (GMRES)"]
-wp = WorkPrecisionSet(probs,abstols,reltols,setups;appxsol=[test_sol,test_sol,test_sol],save_everystep=false,numruns=3,
+labels = ["CVODE_BDF (dense)" "CVODE_BDF (GMRES)" "TRBDF2 (dense)" "TRBDF2 (sparse)" "KenCarp47 (GMRES+ILU)"]
+wp = WorkPrecisionSet(probs, abstols, reltols, setups; appxsol=[test_sol, test_sol], save_everystep=false, numruns=3,
   names=labels, print_names=true, seconds=0.5)
 plot(wp)
 ```
