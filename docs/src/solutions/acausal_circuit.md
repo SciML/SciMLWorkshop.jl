@@ -2,6 +2,7 @@
 
 ```@example rlc
 using ModelingToolkit
+using ModelingToolkit: @mtkmodel, @mtkcompile
 const t = ModelingToolkit.t_nounits
 const D = ModelingToolkit.D_nounits
 using ModelingToolkitStandardLibrary.Electrical
