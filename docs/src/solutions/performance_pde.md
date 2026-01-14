@@ -70,21 +70,21 @@ end
 prob1 = ODEProblem(brusselator_2d_op, u0, tspan, (D2, tmp, p))
 
 sol1 = solve(prob1, TRBDF2(autodiff=false))
-using BenchmarkTools
-@btime solve(prob1, TRBDF2(autodiff=false));
-return nothing #hide
+# Benchmarking (run locally for accurate timings):
+# using BenchmarkTools
+# @btime solve(prob1, TRBDF2(autodiff=false));
+nothing #hide
 ```
 
 Visualizing the solution (works best in a terminal):
 
 ```@example performance_pde
-@gif for t in sol1.t[1]:0.1:sol1.t[end]
-    off = N^2
-    solt = sol1(t)
-    plt1 = surface(reshape(solt[1:off], N, N), zlims=(0, 5), leg=false)
-    surface!(plt1, reshape(solt[off+1:end], N, N), zlims=(0, 5), leg=false)
-    display(plt1)
-end
+# Create a simpler static plot instead of GIF for CI efficiency
+off = N^2
+solt = sol1(sol1.t[end])
+plt1 = surface(reshape(solt[1:off], N, N), zlims=(0, 5), leg=false, title="u at t=$(sol1.t[end])")
+plt2 = surface(reshape(solt[off+1:end], N, N), zlims=(0, 5), leg=false, title="v at t=$(sol1.t[end])")
+plot(plt1, plt2, layout=(1,2), size=(800, 400))
 ```
 
 ## Part 2: Optimizing the BRUSS Code
@@ -127,26 +127,34 @@ function brusselator_2d_loop(du, u, p, t)
 end
 
 prob2 = ODEProblem(brusselator_2d_loop, u0, tspan, p)
-@btime solve(prob2, TRBDF2());
-return nothing #hide
+sol2 = solve(prob2, TRBDF2())
+# Benchmarking: @btime solve(prob2, TRBDF2());
+nothing #hide
 ```
 ```@example performance_pde
-@btime solve(prob2, CVODE_BDF());
-return nothing #hide
+sol2b = solve(prob2, CVODE_BDF())
+# Benchmarking: @btime solve(prob2, CVODE_BDF());
+nothing #hide
 ```
 
-## Part 3: Exploiting Jacobian Sparsity with Color Differentiation
+## Part 3: Exploiting Jacobian Sparsity with Automatic Sparsity Detection
+
+We use `ADTypes.jacobian_sparsity` with `SparseConnectivityTracer` to automatically detect the sparsity pattern.
+This approach traces through the function to identify which matrix elements are accessed, returning a sparse pattern.
 
 ```@example performance_pde
-using Symbolics, SparseDiffTools
+import SparseConnectivityTracer, ADTypes
 
-sparsity_pattern = Symbolics.jacobian_sparsity(brusselator_2d_loop,similar(u0),u0,p,2.0)
-jac_sp = sparse(sparsity_pattern)
-jac = Float64.(jac_sp)
-colors = matrix_colors(jac)
-prob3 = ODEProblem(ODEFunction(brusselator_2d_loop, colorvec=colors,jac_prototype=jac_sp), u0, tspan, p)
-@btime solve(prob3, TRBDF2());
-return nothing #hide
+detector = SparseConnectivityTracer.TracerSparsityDetector()
+du0 = copy(u0)
+jac_sparsity = ADTypes.jacobian_sparsity(
+    (du, u) -> brusselator_2d_loop(du, u, p, 0.0), du0, u0, detector)
+
+f = ODEFunction(brusselator_2d_loop; jac_prototype = float.(jac_sparsity))
+prob3 = ODEProblem(f, u0, tspan, p)
+sol3 = solve(prob3, TRBDF2())
+# Benchmarking: @btime solve(prob3, TRBDF2());
+nothing #hide
 ```
 
 ## (Optional) Part 4: Structured Jacobians
@@ -155,21 +163,38 @@ return nothing #hide
 
 ## Part 6: Utilizing Preconditioned-GMRES Linear Solvers
 
-```julia
-using DiffEqOperators
-using Sundials
-using AlgebraicMultigrid: ruge_stuben, aspreconditioner, smoothed_aggregation
-prob6 = ODEProblem(ODEFunction(brusselator_2d_loop, jac_prototype=JacVecOperator{Float64}(brusselator_2d_loop, u0)), u0, tspan, p)
-II = Matrix{Float64}(I, N, N)
-Op = kron(Matrix{Float64}(I, 2, 2), kron(D2, II) + kron(II, D2))
-Wapprox = -I+Op
-#ml = ruge_stuben(Wapprox)
-ml = smoothed_aggregation(Wapprox)
-precond = aspreconditioner(ml)
-sol_trbdf2 = @time solve(prob6, TRBDF2(linsolve=LinSolveGMRES())); # no preconditioner
-sol_trbdf2 = @time solve(prob6, TRBDF2(linsolve=LinSolveGMRES(Pl=lu(Wapprox)))); # sparse LU
-sol_trbdf2 = @time solve(prob6, TRBDF2(linsolve=LinSolveGMRES(Pl=precond))); # AMG
-sol_cvodebdf = @time solve(prob2, CVODE_BDF(linear_solver=:GMRES));
+We use `KrylovJL_GMRES` with an incomplete LU factorization as a preconditioner.
+The `precs` callback receives the matrix `W = I - gamma*J` and returns preconditioners.
+
+```@example performance_pde
+import IncompleteLU, LinearSolve
+
+function incompletelu(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
+    if newW === nothing || newW
+        Pl = IncompleteLU.ilu(convert(AbstractMatrix, W), τ = 50.0)
+    else
+        Pl = Plprev
+    end
+    Pl, nothing
+end
+
+# Required for IncompleteLU to work with LinearSolve
+Base.eltype(::IncompleteLU.ILUFactorization{Tv, Ti}) where {Tv, Ti} = Tv
+
+# Using sparse Jacobian with GMRES and ILU preconditioner
+sol6 = solve(prob3,
+    KenCarp47(linsolve = LinearSolve.KrylovJL_GMRES(), precs = incompletelu,
+        concrete_jac = true); save_everystep = false)
+# Benchmarking: @btime solve(prob3, KenCarp47(...); save_everystep = false);
+nothing #hide
+```
+
+For comparison, Sundials CVODE_BDF with GMRES:
+
+```@example performance_pde
+sol_cvodebdf = solve(prob2, CVODE_BDF(linear_solver=:GMRES))
+# Benchmarking: @btime solve(prob2, CVODE_BDF(linear_solver=:GMRES));
+nothing #hide
 ```
 
 ## Part 7: Exploring IMEX and Exponential Integrator Techniques (E)
@@ -222,8 +247,9 @@ function brusselator_reaction(du, u, p, t)
     nothing
 end
 prob7 = SplitODEProblem(laplacian2d, brusselator_reaction, u0, tspan, p)
-@btime solve(prob7, KenCarp4());
-return nothing #hide
+sol7 = solve(prob7, KenCarp4())
+# Benchmarking: @btime solve(prob7, KenCarp4());
+nothing #hide
 ```
 ```julia
 M = MatrixFreeOperator((du,u,p)->laplacian2d(du, u, p, 0), (p,), size=(2*N^2, 2*N^2), opnorm=1000)
@@ -239,21 +265,23 @@ return nothing #hide
 
 ## Part 8: Work-Precision Diagrams for Benchmarking Solver Choices
 
+The WorkPrecisionSet benchmarks are computationally intensive. Run locally for detailed comparisons:
+
 ```julia
 using DiffEqDevTools
 abstols = 0.1 .^ (5:8)
 reltols = 0.1 .^ (1:4)
-sol = solve(prob3,CVODE_BDF(linear_solver=:GMRES),abstol=1/10^7,reltol=1/10^10)
+sol = solve(prob3, CVODE_BDF(linear_solver=:GMRES), abstol=1/10^7, reltol=1/10^10)
 test_sol = TestSolution(sol)
-probs = [prob2, prob3, prob6]
-setups = [Dict(:alg=>CVODE_BDF(),:prob_choice => 1),
+probs = [prob2, prob3]
+setups = [Dict(:alg=>CVODE_BDF(), :prob_choice => 1),
           Dict(:alg=>CVODE_BDF(linear_solver=:GMRES), :prob_choice => 1),
           Dict(:alg=>TRBDF2(), :prob_choice => 1),
-          Dict(:alg=>TRBDF2(linsolve=LinSolveGMRES(Pl=precond)), :prob_choice => 3),
-          Dict(:alg=>TRBDF2(), :prob_choice => 2)
+          Dict(:alg=>TRBDF2(), :prob_choice => 2),
+          Dict(:alg=>KenCarp47(linsolve = LinearSolve.KrylovJL_GMRES(), precs = incompletelu, concrete_jac = true), :prob_choice => 2)
          ]
-labels = ["CVODE_BDF (dense)" "CVODE_BDF (GMRES)" "TRBDF2 (dense)" "TRBDF2 (sparse)" "TRBDF2 (GMRES)"]
-wp = WorkPrecisionSet(probs,abstols,reltols,setups;appxsol=[test_sol,test_sol,test_sol],save_everystep=false,numruns=3,
+labels = ["CVODE_BDF (dense)" "CVODE_BDF (GMRES)" "TRBDF2 (dense)" "TRBDF2 (sparse)" "KenCarp47 (GMRES+ILU)"]
+wp = WorkPrecisionSet(probs, abstols, reltols, setups; appxsol=[test_sol, test_sol], save_everystep=false, numruns=3,
   names=labels, print_names=true, seconds=0.5)
 plot(wp)
 ```
