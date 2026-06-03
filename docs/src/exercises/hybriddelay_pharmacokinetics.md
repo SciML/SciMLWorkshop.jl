@@ -64,7 +64,7 @@ do this is via Automatic Differentiation (AD). For small numbers of parameters
 we will make use of ForwardDiff.jl to use Dual number arithmetic to retrieve
 both the solution and its derivative w.r.t. parameters in a single solve.
 
-[Use the information from the page on local sensitvity analysis](https://docs.sciml.ai/dev/analysis/sensitivity)
+[Use the information from the page on local sensitivity analysis](https://docs.sciml.ai/dev/analysis/sensitivity)
 to define the input dual numbers, solve the equation, and plot both the solution
 over time and the derivative of the solution w.r.t. the parameters.
 
