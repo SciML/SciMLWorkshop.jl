@@ -4,6 +4,8 @@
 
 ```@example hybriddelay
 using DifferentialEquations
+using DelayDiffEq: MethodOfSteps
+using OrdinaryDiffEqRosenbrock: Rosenbrock23
 using Plots
 function onecompartment(du,u,p,t)
   Ka,Ke = p

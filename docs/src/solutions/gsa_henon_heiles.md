@@ -4,6 +4,7 @@
 
 ```@example henon
 using DifferentialEquations, Plots, DiffEqPhysics
+using OrdinaryDiffEqRKN: DPRKN6
 
 function henon(dz,z,p,t)
   p₁, p₂, q₁, q₂ = z[1], z[2], z[3], z[4]
