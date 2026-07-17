@@ -76,9 +76,8 @@ end
 
 z0 = generate_ics(0.125, 10)
 
-function prob_func(prob,i,repeat)
-  @. prob.u0 = z0[i]
-  prob
+function prob_func(prob, context)
+  remake(prob; u0 = z0[context.sim_id])
 end
 
 ensprob = EnsembleProblem(prob, prob_func=prob_func)
