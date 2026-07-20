@@ -4,6 +4,7 @@
 using ModelingToolkit
 using ModelingToolkit: t_nounits as t, D_nounits as D
 using DifferentialEquations, Plots, ControlSystemsBase
+using OrdinaryDiffEqRosenbrock: Rodas4
 using ModelingToolkitStandardLibrary.Electrical
 using ModelingToolkitStandardLibrary.Mechanical.Rotational
 using ModelingToolkitStandardLibrary.Blocks

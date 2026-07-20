@@ -2,6 +2,9 @@
 
 ```@example stiffbio
 using DifferentialEquations
+using OrdinaryDiffEqRosenbrock: Rodas5
+using StochasticDiffEqHighOrder: SOSRI
+using StochasticDiffEqImplicit: ImplicitRKMil
 using Sundials
 using BenchmarkTools
 using Plots

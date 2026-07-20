@@ -4,6 +4,7 @@
 
 ```@example pendulum
 using DifferentialEquations, Plots, Sundials
+using OrdinaryDiffEqRosenbrock: Rodas5
 
 function f(du, u, p, t)
     du[1] = -p[1]*u[1] + p[2]*u[2]*u[3]
