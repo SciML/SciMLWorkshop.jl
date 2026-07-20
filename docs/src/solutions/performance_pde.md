@@ -5,6 +5,7 @@
 ```@example performance_pde
 using DifferentialEquations, Sundials, Plots
 using ADTypes: AutoFiniteDiff
+using OrdinaryDiffEqSDIRK: KenCarp4, KenCarp47, TRBDF2
 
 # initial condition
 function init_brusselator_2d(xyd)
