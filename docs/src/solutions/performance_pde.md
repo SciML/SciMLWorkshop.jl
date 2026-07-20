@@ -4,6 +4,7 @@
 
 ```@example performance_pde
 using DifferentialEquations, Sundials, Plots
+using ADTypes: AutoFiniteDiff
 using OrdinaryDiffEqSDIRK: KenCarp4, KenCarp47, TRBDF2
 
 # initial condition
@@ -70,10 +71,10 @@ end
 
 prob1 = ODEProblem(brusselator_2d_op, u0, tspan, (D2, tmp, p))
 
-sol1 = solve(prob1, TRBDF2(autodiff=false))
+sol1 = solve(prob1, TRBDF2(autodiff=AutoFiniteDiff()))
 # Benchmarking (run locally for accurate timings):
 # using BenchmarkTools
-# @btime solve(prob1, TRBDF2(autodiff=false));
+# @btime solve(prob1, TRBDF2(autodiff=AutoFiniteDiff()));
 nothing #hide
 ```
 
