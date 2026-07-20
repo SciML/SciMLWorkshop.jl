@@ -166,18 +166,15 @@ nothing #hide
 ## Part 6: Utilizing Preconditioned-GMRES Linear Solvers
 
 We use `KrylovJL_GMRES` with an incomplete LU factorization as a preconditioner.
-The `precs` callback receives the matrix `W = I - gamma*J` and returns preconditioners.
+The `precs` callback receives the linear operator and problem parameters and returns
+left and right preconditioners.
 
 ```@example performance_pde
 import IncompleteLU, LinearSolve
 
-function incompletelu(W, du, u, p, t, newW, Plprev, Prprev, solverdata)
-    if newW === nothing || newW
-        Pl = IncompleteLU.ilu(convert(AbstractMatrix, W), τ = 50.0)
-    else
-        Pl = Plprev
-    end
-    Pl, nothing
+function incompletelu(A, p)
+    Pl = IncompleteLU.ilu(convert(AbstractMatrix, A), τ = 50.0)
+    Pl, I
 end
 
 # Required for IncompleteLU to work with LinearSolve
@@ -185,7 +182,7 @@ Base.eltype(::IncompleteLU.ILUFactorization{Tv, Ti}) where {Tv, Ti} = Tv
 
 # Using sparse Jacobian with GMRES and ILU preconditioner
 sol6 = solve(prob3,
-    KenCarp47(linsolve = LinearSolve.KrylovJL_GMRES(), precs = incompletelu,
+    KenCarp47(linsolve = LinearSolve.KrylovJL_GMRES(precs = incompletelu),
         concrete_jac = true); save_everystep = false)
 # Benchmarking: @btime solve(prob3, KenCarp47(...); save_everystep = false);
 nothing #hide
