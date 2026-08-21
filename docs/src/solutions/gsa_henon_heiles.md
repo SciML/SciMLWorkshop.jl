@@ -4,7 +4,7 @@
 
 ```@example henon
 using DifferentialEquations, Plots, DiffEqPhysics
-using OrdinaryDiffEqRKN: DPRKN6
+using OrdinaryDiffEqRKN: DPRKN6, FineRKN4
 
 function henon(dz,z,p,t)
   p₁, p₂, q₁, q₂ = z[1], z[2], z[3], z[4]
@@ -28,7 +28,6 @@ plot(sol, idxs=[(3,4,1)], tspan=(0,100))
 
 ```@example henon
 function henon(ddz,dz,z,p,t)
-  p₁, p₂ = dz[1], dz[2]
   q₁, q₂ = z[1], z[2]
   ddq₁ = -q₁*(1 + 2q₂)
   ddq₂ = -q₂-(q₁^2 - q₂^2)
@@ -47,7 +46,7 @@ plot(sol, vars=[(3,4)], tspan=(0,100))
 H(p, q, params) = 1/2 * (p[1]^2 + p[2]^2) + 1/2 * (q[1]^2 + q[2]^2 + 2q[1]^2 * q[2] - 2/3*q[2]^3)
 
 prob3 = HamiltonianProblem(H, p₀, q₀, (0., 1000.))
-sol = solve(prob3, DPRKN6(), abstol=1e-10, reltol=1e-10)
+sol = solve(prob3, FineRKN4(), abstol=1e-10, reltol=1e-10)
 
 plot(sol, idxs=[(3,4)], tspan=(0,100))
 ```

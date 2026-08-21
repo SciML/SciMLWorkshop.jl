@@ -1,5 +1,12 @@
+using SciMLTesting
 using SciMLWorkshop
 using Test
 
-# Tests are just for docs generation
-@test nameof(SciMLWorkshop) === :SciMLWorkshop
+run_tests(
+    ;
+    core = () -> @test(nameof(SciMLWorkshop) === :SciMLWorkshop),
+    qa = (;
+        env = joinpath(@__DIR__, "qa"),
+        body = joinpath(@__DIR__, "qa", "qa.jl"),
+    ),
+)
