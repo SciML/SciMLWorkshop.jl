@@ -1,7 +1,7 @@
 name = "SciMLWorkshop"
 uuid = "6821e370-b0bb-497c-beb7-809790cbeb12"
 authors = ["Chris Rackauckas <accounts@chrisrackauckas.com>"]
-version = "1.0.2"
+version = "1.0.3"
 
 [extras]
 SciMLTesting = "09d9d899-5365-40a9-917a-5f67fddea283"
