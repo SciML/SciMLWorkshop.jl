@@ -21,9 +21,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version:
-          - "1"
+        include:
+          - version: "1"
+            arch: x64
+          - version: "1"
+            arch: x86
     uses: "SciML/.github/.github/workflows/tests.yml@v1"
     with:
       julia-version: "${{ matrix.version }}"
+      julia-arch: "${{ matrix.arch }}"
     secrets: "inherit"
