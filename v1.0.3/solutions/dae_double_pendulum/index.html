@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Differential-Algebraic Equation Modeling of a Double Pendulum (B) · SciML Workshop</title><meta name="title" content="Differential-Algebraic Equation Modeling of a Double Pendulum (B) · SciML Workshop"/><meta property="og:title" content="Differential-Algebraic Equation Modeling of a Double Pendulum (B) · SciML Workshop"/><meta property="twitter:title" content="Differential-Algebraic Equation Modeling of a Double Pendulum (B) · SciML Workshop"/><meta name="description" content="Documentation for SciML Workshop."/><meta property="og:description" content="Documentation for SciML Workshop."/><meta property="twitter:description" content="Documentation for SciML Workshop."/><meta property="og:url" content="https://docs.sciml.ai/SciMLWorkshop/stable/solutions/dae_double_pendulum/"/><meta property="twitter:url" content="https://docs.sciml.ai/SciMLWorkshop/stable/solutions/dae_double_pendulum/"/><link rel="canonical" href="https://docs.sciml.ai/SciMLWorkshop/stable/solutions/dae_double_pendulum/"/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.63.2/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="SciML Workshop logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">SciML Workshop</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">SciMLWorkshop: Workshop Materials for Training in Scientific Computing and Scientific Machine Learning (SciML)</a></li><li><span class="tocitem">Exercises</span><ul><li><a class="tocitem" href="../../exercises/mtk_chemical_reaction/">ModelingToolkit Simple Chemical Reaction ODE (B)</a></li><li><a class="tocitem" href="../../exercises/stiffbio_uncertainty/">Investigating Sources of Randomness and Uncertainty in a Stiff Biological System (B)</a></li><li><a class="tocitem" href="../../exercises/hybriddelay_pharmacokinetics/">Fitting Hybrid Delay Pharmacokinetic Models with Automated Responses (B)</a></li><li><a class="tocitem" href="../../exercises/dae_double_pendulum/">Differential-Algebraic Equation Modeling of a Double Pendulum (B)</a></li><li><a class="tocitem" href="../../exercises/acausal_circuit/">RLC Circuit Acausal Model (I)</a></li><li><a class="tocitem" href="../../exercises/performance_pde/">Performance Optimizing and Parallelizing Semilinear PDE Solvers (I)</a></li><li><a class="tocitem" href="../../exercises/gsa_henon_heiles/">Global Parameter Sensitivity and Optimality with GPU and Distributed Ensembles (B)</a></li><li><a class="tocitem" href="../../exercises/neural_sde/">Training Neural Stochastic Differential Equations with GPU acceleration (I)</a></li><li><a class="tocitem" href="../../exercises/dc_motor_control/">Controlling a DC Motor (E)</a></li></ul></li><li><span class="tocitem">Selected Solutions</span><ul><li><a class="tocitem" href="../mtk_chemical_reaction/">ModelingToolkit Simple Chemical Reaction ODE (B)</a></li><li><a class="tocitem" href="../stiffbio_uncertainty/">Investigating Sources of Randomness and Uncertainty in a Stiff Biological System (B)</a></li><li><a class="tocitem" href="../hybriddelay_pharmacokinetics/">Fitting Hybrid Delay Pharmacokinetic Models with Automated Responses (B)</a></li><li class="is-active"><a class="tocitem" href>Differential-Algebraic Equation Modeling of a Double Pendulum (B)</a><ul class="internal"><li><a class="tocitem" href="#Part-1:-Simple-Introduction-to-DAEs:-Mass-Matrix-Robertson-Equations"><span>Part 1: Simple Introduction to DAEs: Mass-Matrix Robertson Equations</span></a></li><li><a class="tocitem" href="#Part-2:-Solving-the-Implicit-Robertson-Equations-with-IDA"><span>Part 2: Solving the Implicit Robertson Equations with IDA</span></a></li><li><a class="tocitem" href="#Part-3:-Manual-Index-Reduction-of-the-Single-Pendulum"><span>Part 3: Manual Index Reduction of the Single Pendulum</span></a></li><li><a class="tocitem" href="#Part-4:-Single-Pendulum-Solution-with-IDA"><span>Part 4: Single Pendulum Solution with IDA</span></a></li><li><a class="tocitem" href="#Part-5:-Solving-the-Double-Pendulum-DAE-System"><span>Part 5: Solving the Double Pendulum DAE System</span></a></li></ul></li><li><a class="tocitem" href="../acausal_circuit/">RLC Circuit Acausal Model (I)</a></li><li><a class="tocitem" href="../performance_pde/">Performance Optimizing and Parallelizing Semilinear PDE Solvers (I)</a></li><li><a class="tocitem" href="../gsa_henon_heiles/">Global Parameter Sensitivity and Optimality with GPU and Distributed Ensembles (B)</a></li><li><a class="tocitem" href="../neural_sde/">Training Neural Stochastic Differential Equations with GPU acceleration (I)</a></li><li><a class="tocitem" href="../dc_motor_control/">Controlling a DC Motor (E)</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Selected Solutions</a></li><li class="is-active"><a href>Differential-Algebraic Equation Modeling of a Double Pendulum (B)</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Differential-Algebraic Equation Modeling of a Double Pendulum (B)</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/SciML/SciMLWorkshop.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/SciML/SciMLWorkshop.jl/blob/main/docs/src/solutions/dae_double_pendulum.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Differential-Algebraic-Equation-Modeling-of-a-Double-Pendulum-(B)"><a class="docs-heading-anchor" href="#Differential-Algebraic-Equation-Modeling-of-a-Double-Pendulum-(B)">Differential-Algebraic Equation Modeling of a Double Pendulum (B)</a><a id="Differential-Algebraic-Equation-Modeling-of-a-Double-Pendulum-(B)-1"></a><a class="docs-heading-anchor-permalink" href="#Differential-Algebraic-Equation-Modeling-of-a-Double-Pendulum-(B)" title="Permalink"></a></h1><h2 id="Part-1:-Simple-Introduction-to-DAEs:-Mass-Matrix-Robertson-Equations"><a class="docs-heading-anchor" href="#Part-1:-Simple-Introduction-to-DAEs:-Mass-Matrix-Robertson-Equations">Part 1: Simple Introduction to DAEs: Mass-Matrix Robertson Equations</a><a id="Part-1:-Simple-Introduction-to-DAEs:-Mass-Matrix-Robertson-Equations-1"></a><a class="docs-heading-anchor-permalink" href="#Part-1:-Simple-Introduction-to-DAEs:-Mass-Matrix-Robertson-Equations" title="Permalink"></a></h2><pre><code class="language-julia hljs">using DifferentialEquations, Plots, Sundials
+using OrdinaryDiffEqRosenbrock: Rodas5
+
+function f(du, u, p, t)
+    du[1] = -p[1]*u[1] + p[2]*u[2]*u[3]
+    du[2] = p[1]*u[1] - p[2]*u[2]*u[3] - p[3]*u[2]*u[2]
+    du[3] = u[1] + u[2] + u[3] - 1.
+end
+M = [1 0 0; 0 1 0; 0 0 0.]
+p = [0.04, 10^4, 3e7]
+u0 = [1.,0.,0.]
+tspan = (0., 1e6)
+prob = ODEProblem(ODEFunction(f, mass_matrix = M), u0, tspan, p)
+sol = solve(prob, Rodas5())
+plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))</code></pre><img src="b757da03.svg" alt="Example block output"/><h2 id="Part-2:-Solving-the-Implicit-Robertson-Equations-with-IDA"><a class="docs-heading-anchor" href="#Part-2:-Solving-the-Implicit-Robertson-Equations-with-IDA">Part 2: Solving the Implicit Robertson Equations with IDA</a><a id="Part-2:-Solving-the-Implicit-Robertson-Equations-with-IDA-1"></a><a class="docs-heading-anchor-permalink" href="#Part-2:-Solving-the-Implicit-Robertson-Equations-with-IDA" title="Permalink"></a></h2><pre><code class="language-julia hljs"># Robertson Equation DAE Implicit form
+function h(out, du, u, p, t)
+    out[1] = -p[1]*u[1] + p[2]*u[2]*u[3] - du[1]
+    out[2] = p[1]*u[1] - p[2]*u[2]*u[3] - p[3]*u[2]*u[2] - du[2]
+    out[3] = u[1] + u[2] + u[3] - 1.
+end
+p = [0.04, 10^4, 3e7]
+du0 = [-0.04, 0.04, 0.0]
+u0 = [1.,0.,0.]
+tspan = (0., 1e6)
+differential_vars = [true, true, false]
+prob = DAEProblem(h, du0, u0, tspan, p, differential_vars = differential_vars)
+sol = solve(prob, IDA())
+plot(sol, xscale=:log10, tspan=(1e-6, 1e5), layout=(3,1))</code></pre><img src="9ae48dd3.svg" alt="Example block output"/><h2 id="Part-3:-Manual-Index-Reduction-of-the-Single-Pendulum"><a class="docs-heading-anchor" href="#Part-3:-Manual-Index-Reduction-of-the-Single-Pendulum">Part 3: Manual Index Reduction of the Single Pendulum</a><a id="Part-3:-Manual-Index-Reduction-of-the-Single-Pendulum-1"></a><a class="docs-heading-anchor-permalink" href="#Part-3:-Manual-Index-Reduction-of-the-Single-Pendulum" title="Permalink"></a></h2><p>Consider the equation: $ x^2 + y^2 = L $ Differentiating once with respect to time: $ 2x\dot{x} + 2y\dot{y} = 0 $ A second time:</p><p class="math-container">\[\begin{align*}
+{\dot{x}}^2 + x\ddot{x} + {\dot{y}}^2 + y\ddot{y} &amp;= 0  \\
+u^2 + v^2 + x(\frac{x}{mL}T) + y(\frac{y}{mL}T - g) &amp;= 0  \\
+u^2 + v^2 + \frac{x^2 + y^2}{mL}T - yg &amp;= 0 \\
+u^2 + v^2 + \frac{T}{m} - yg &amp;= 0
+\end{align*}\]</p><p>Our final set of equations is hence</p><p class="math-container">\[\begin{align*}
+   \ddot{x} &amp;= \frac{x}{mL}T \\
+   \ddot{y} &amp;= \frac{y}{mL}T - g \\
+   \dot{x} &amp;= u \\
+   \dot{y} &amp;= v \\
+   u^2 + v^2 -yg + \frac{T}{m} &amp;= 0
+\end{align*}\]</p><p>We finally obtain <span>$T$</span> into the third equation. This required two differentiations with respect to time, and so our system of equations went from index 3 to index 1. Now our solver can handle the index 1 system.</p><h2 id="Part-4:-Single-Pendulum-Solution-with-IDA"><a class="docs-heading-anchor" href="#Part-4:-Single-Pendulum-Solution-with-IDA">Part 4: Single Pendulum Solution with IDA</a><a id="Part-4:-Single-Pendulum-Solution-with-IDA-1"></a><a class="docs-heading-anchor-permalink" href="#Part-4:-Single-Pendulum-Solution-with-IDA" title="Permalink"></a></h2><pre><code class="language-julia hljs">function f(out, da, a, p, t)
+   (L, m, g) = p
+   u, v, x, y, T = a
+   du, dv, dx, dy, dT = da
+   out[1] = x*T/(m*L) - du
+   out[2] = y*T/(m*L) - g - dv
+   out[3] = u - dx
+   out[4] = v - dy
+   out[5] = u^2 + v^2 - y*g + T/m
+   nothing
+end
+
+# Release pendulum from top right
+# State: [u, v, x, y, T] where u=dx/dt, v=dy/dt
+u0 = zeros(5)
+u0[3] = 1.0  # x = 1 (pendulum starts horizontal)
+du0 = zeros(5)
+du0[2] = -9.8  # dv = y*T/(m*L) - g = 0 - 9.8 = -9.8 (gravity accelerates downward)
+
+p = [1,1,9.8]
+tspan = (0.,100.)
+
+differential_vars = [true, true, true, true, false]
+prob = DAEProblem(f, du0, u0, tspan, p, differential_vars = differential_vars)
+sol = solve(prob, IDA())
+plot(sol, idxs=(3,4))</code></pre><img src="79c087be.svg" alt="Example block output"/><h2 id="Part-5:-Solving-the-Double-Pendulum-DAE-System"><a class="docs-heading-anchor" href="#Part-5:-Solving-the-Double-Pendulum-DAE-System">Part 5: Solving the Double Pendulum DAE System</a><a id="Part-5:-Solving-the-Double-Pendulum-DAE-System-1"></a><a class="docs-heading-anchor-permalink" href="#Part-5:-Solving-the-Double-Pendulum-DAE-System" title="Permalink"></a></h2><p>For the double pendulum: The equations for the second ball are the same as the single pendulum case. That is, the equations for the second ball are:</p><p class="math-container">\[\begin{align*}
+   \ddot{x_2} &amp;= \frac{x_2}{m_2L_2}T_2 \\
+   \ddot{y_2} &amp;= \frac{y_2}{m_2L_2}T_2 - g \\
+   \dot{x_2} &amp;= u \\
+   \dot{y_2} &amp;= v \\
+   u_2^2 + v_2^2 -y_2g + \frac{T_2}{m_2} &amp;= 0
+\end{align*}\]</p><p>For the first ball, consider x_1^2 + y_1^2 = L $</p><p class="math-container">\[\begin{align*}
+x_1^2 + x_2^2 &amp;= L \\
+2x_1\dot{x_1} + 2y_1\dot{y_1} &amp;= 0 \\
+\dot{x_1}^2 + \dot{y_1}^2 + x_1(\frac{x_1}{m_1L_1}T_1 - \frac{x_2}{m_1L_2}T_2) + y_1(\frac{y_1}{m_1L_1}T_1 - g - \frac{y_2}{m_1L_2}T_2) &amp;= 0 \\
+u_1^2 + v_1^2 + \frac{T_1}{m_1} - \frac{x_1x_2 + y_1y_2}{m_1L_2}T_2 &amp;= 0
+\end{align*}\]</p><p>So the final equations are:</p><p class="math-container">\[\begin{align*}
+   \dot{u_2} &amp;= x_2*T_2/(m_2*L_2)
+   \dot{v_2} &amp;= y_2*T_2/(m_2*L_2) - g
+   \dot{x_2} &amp;= u_2
+   \dot{y_2} &amp;= v_2
+   u_2^2 + v_2^2 -y_2*g + \frac{T_2}{m_2} &amp;=  0
+
+   \dot{u_1} &amp;= x_1*T_1/(m_1*L_1) - x_2*T_2/(m_2*L_2)
+   \dot{v_1} &amp;= y_1*T_1/(m_1*L_1) - g - y_2*T_2/(m_2*L_2)
+   \dot{x_1} &amp;= u_1
+   \dot{y_1} &amp;= v_1
+   u_1^2 + v_1^2 + \frac{T_1}{m_1} +
+                \frac{-x_1*x_2 - y_1*y_2}{m_1L_2}T_2 - y_1g &amp;= 0
+\end{align*}\]</p><pre><code class="language-julia hljs">function f(out, da, a, p, t)
+   L1, m1, L2, m2, g = p
+
+   u1, v1, x1, y1, T1,
+   u2, v2, x2, y2, T2 = a
+
+   du1, dv1, dx1, dy1, dT1,
+   du2, dv2, dx2, dy2, dT2 = da
+
+   out[1]  = x2*T2/(m2*L2) - du2
+   out[2]  = y2*T2/(m2*L2) - g - dv2
+   out[3]  = u2 - dx2
+   out[4]  = v2 - dy2
+   out[5]  = u2^2 + v2^2 -y2*g + T2/m2
+
+   out[6]  = x1*T1/(m1*L1) - x2*T2/(m2*L2) - du1
+   out[7]  = y1*T1/(m1*L1) - g - y2*T2/(m2*L2) - dv1
+   out[8]  = u1 - dx1
+   out[9]  = v1 - dy1
+   out[10] = u1^2 + v1^2 + T1/m1 +
+                (-x1*x2 - y1*y2)/(m1*L2)*T2 - y1*g
+   nothing
+end
+
+# Release pendulum from top right
+# State: [u1, v1, x1, y1, T1, u2, v2, x2, y2, T2]
+u0 = zeros(10)
+u0[3] = 1.0   # x1 = 1 (first pendulum horizontal)
+u0[8] = 1.0   # x2 = 1 (second pendulum horizontal)
+du0 = zeros(10)
+du0[2] = -9.8   # dv2: gravity accelerates downward
+du0[7] = -9.8   # dv1: gravity accelerates downward
+
+p = [1,1,1,1,9.8]
+tspan = (0.,100.)
+
+differential_vars = [true, true, true, true, false,
+                     true, true, true, true, false]
+prob = DAEProblem(f, du0, u0, tspan, p, differential_vars = differential_vars)
+sol = solve(prob, IDA())
+
+plot(sol, idxs=(3,4))</code></pre><img src="c818b374.svg" alt="Example block output"/><pre><code class="language-julia hljs">plot(sol, idxs=(8,9))</code></pre><img src="2c7ba527.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hybriddelay_pharmacokinetics/">« Fitting Hybrid Delay Pharmacokinetic Models with Automated Responses (B)</a><a class="docs-footer-nextpage" href="../acausal_circuit/">RLC Circuit Acausal Model (I) »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.19.0 on <span class="colophon-date" title="Tuesday 13 October 2026 03:34">Tuesday 13 October 2026</span>. Using Julia version 1.11.9.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
